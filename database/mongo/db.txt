@@ -1,0 +1,87 @@
+blog-api/
+├── mongo/
+│   ├── Dockerfile
+│   ├── init/
+│   │   └── seed.js
+│   └── .dockerignore
+
+
+
+# Build image
+docker build -t neyo55/mongo-seeded:latest .
+
+# Run locally for testing
+docker run -d -p 27017:27017 --name mongo-seeded \
+  -e MONGO_INITDB_ROOT_USERNAME=admin \
+  -e MONGO_INITDB_ROOT_PASSWORD=password123 \
+  neyo55/mongo-seeded:latest
+
+# Push to Docker Hub
+docker push neyo55/mongo-seeded:latest
+
+
+
+docker run -d -p 3000:3000 \
+  --name blog-api-backend \
+  -e MONGO_URI="mongodb://admin:password123@host.docker.internal:27017/blog-db?authSource=admin" \
+  neyo55/blog-api-backend:latest
+
+
+
+# Open a shell inside the container (to view the CRUD inside the db)
+docker exec -it mongo-seeded mongosh -u admin -p password123 --authenticationDatabase admin
+use blog-db
+db.posts.find().pretty()
+
+# how to access the blog-db 
+docker exec -it blog-db mongosh -u admin -p password123 --authenticationDatabase admin
+
+
+# for mongo compass testing locally 
+mongodb://admin:password123@localhost:27017/blog-db?authSource=admin
+
+# for mongo compass using instance public ip 
+mongodb://neyo:neyo@53669@18.201.178.82:27017/blog-db?authSource=blog-db
+mongodb://admin:password123@18.201.178.82:27017/?authSource=admin
+
+
+
+# To stop a running background container
+docker rm -f cranky_merkle
+
+
+docker compose down -v   # Clean any previous containers/volumes
+docker compose pull      # Ensure all latest images are fetched
+docker compose up --build
+
+
+
+# Using created username and password to access the database in the container(current database)
+docker exec -it blog-db mongosh -u admin -p password123 --authenticationDatabase admin
+docker exec -it blog-db mongosh -u neyo -p 'neyo@53669' --authenticationDatabase blog-db
+
+show dbs
+use blog-db
+show collections
+db.posts.find()
+db.posts.find().pretty()
+
+
+
+use blog-db
+db.auth("neyo", "neyo@53669")
+db.getUser("neyo")
+
+mongosh -u neyo -p 'neyo@53669' --authenticationDatabase blog-db
+
+# run this command from the backend to ensure it is connected to the db instance
+mongosh "mongodb://admin:password123@54.194.118.198:27017/blog-db?authSource=admin"
+
+
+# To run the mongo server with terminating or stop 
+nohup mongod --dbpath ~/mongodb-data --bind_ip_all --port 27017 > mongo.log 2>&1 &
+mongosh
+
+
+# Mongo data folder needs to be created on the instance of the database
+mkdir ~ p mongodb-data

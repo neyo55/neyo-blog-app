@@ -1,0 +1,349 @@
+npm install --save-dev cross-env
+npm install cors
+npm install axios@^1.6.0
+npm install dotenv
+npm install --save-dev jest
+npm test
+
+npm install
+npm start
+ctrl C
+
+
+taskkill /IM node.exe /F
+docker-compose down
+
+netstat -aon | findstr :3000
+
+# To start the Mongodb 
+docker run -d --name mongo -p 27017:27017 -v mongo-data:/data/db mongo:latest
+
+# Run this if the container already exist 
+docker start mongo 
+
+
+# To start the backend, cd in to the backend files dir.
+npm start 
+
+
+# To create a default node.js frontend files 
+npx create-react-app client
+
+# To start the frontend, cd into client dir also the same command for backend.
+npm install
+npm install dotenv
+npm start 
+
+# to start the database
+mongosh
+
+
+# To check the content of the created blog in mongodb at backend on browser 
+http://localhost:3000/api/posts
+
+or to check it from the terminal 
+
+curl http://localhost:3000/api/posts
+
+# To login to the mongodb database using deafult credentials
+docker exec -it mongo mongosh
+use blog-api
+db.posts.find()
+
+# To login to mongodb in the container 
+docker exec -it blog-api-mongo-1 mongosh
+use blog-api
+db.posts.find()
+
+######## Using created username and password to access the database (current database)
+docker exec -it blog-db mongosh -u admin -p password123 --authenticationDatabase admin
+use blog-api
+db.posts.find()
+db.posts.find().pretty(_)
+
+# Using created username and password to access the database
+docker exec -it blog-api-mongo-1 mongosh -u neyo55 -p neyo53669 --authenticationDatabase admin
+use blog-api
+db.posts.find()
+
+# Open a shell inside the container
+docker exec -it mongo-seeded mongosh -u admin -p password123 --authenticationDatabase admin
+
+
+
+# To stop and restart the MongoDB container
+docker stop mongo
+docker start mongo
+
+dbname blog-db
+user admin
+passord password123
+authdb admin
+
+
+# This is used to test the CRUD in backend of the app if it works using the terminal and u can edit the title and content as desired.
+curl -X POST -H "Content-Type: application/json" -d '{"title":"Test","content":"Content"}' http://localhost:3000/api/posts
+
+
+docker build -t
+docker ps -a
+docker-compose up --build
+docker-compose down
+docker-compose logs app
+docker-compose logs frontend
+docker logs blog-frontend
+docker-compose logs mongo
+
+
+# clean rebuild after changes to dockerfile or compose 
+docker-compose down --volumes --remove-orphans
+docker-compose down -v
+docker-compose build --no-cache
+docker-compose up -d
+
+
+API Root: http://localhost:3000
+API Health: http://localhost:3000/health
+Frontend: http://localhost:3001
+
+
+docker tag blog-api-backend:latest neyo55/blog-api-backend:latest
+docker tag blog-api-frontend:latest neyo55/blog-api-frontend:latest
+
+docker build -t neyo55/blog-api-backend:latest .
+docker build -t neyo55/blog-api-frontend:latest .
+
+docker build --no-cache -f client/Dockerfile -t neyo55/blog-api-frontend:latest client/
+
+docker run -d -p 3001:3001 neyo55/blog-api-frontend:latest
+
+docker run -d -p 3000:3000 -e MONGO_URI=mongodb://host.docker.internal:27017/blog-api neyo55/blog-api-backend:latest
+
+
+docker push neyo55/blog-api-backend:latest
+docker push neyo55/blog-api-frontend:latest
+
+# To check the health of the containers 
+docker inspect --format='{{json .State.Health}}' blog-api-app-1
+docker inspect --format='{{json .State.Health}}' blog-api-frontend-1
+docker inspect --format='{{json .State.Health}}' blog-api-mongo-1
+
+# To remove the untagged images 
+docker rmi $(docker images -f "dangling=true" -q)
+
+
+# To generate a random base64 32bit secret key
+openssl rand -base64 32
+
+
+# To get aws iam user using cli
+aws sts get-caller-identity
+
+
+API Root: http://localhost:3000
+API Health: http://localhost:3000/health
+Frontend: http://localhost:3001
+
+
+sudo ufw allow 3000/tcp    # backend
+sudo ufw allow 3001/tcp    # frontend
+sudo ufw allow 27017/tcp   # MongoDB (optional, only for remote admin access)
+
+
+# indie frontend docker container
+docker exec -it blog-frontend sh
+echo $REACT_APP_API_BASE_URL
+cat build/static/js/main*.js | grep 34.252.93.52
+
+# to check the user data log file 
+sudo tail -n 100 /var/log/user-data.log
+
+# 
+sudo lsof -i :27017
+
+# commant to move database folder to another location (ubuntu)
+sudo mv /home/ubuntu/blog-api/database/ /home/ubuntu/
+sudo mv /home/ubuntu/blog-api/backend/ /home/ubuntu/
+sudo mv /home/ubuntu/blog-api/frontend/ /home/ubuntu/
+
+# commant to move frontend.sh file to frontend directory
+sudo mv mongo.sh /home/ubuntu/database
+
+
+
+
+# Nginx setup for the frontend
+sudo ln -s /etc/nginx/sites-available/frontend /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+
+sudo rm /etc/nginx/sites-enabled/default
+sudo nano /etc/nginx/sites-available/frontend
+
+server {
+    listen 80;
+
+    server_name _;
+
+    location / {
+        proxy_pass http://54.195.13.247:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+
+# enable the config 
+sudo ln -s /etc/nginx/sites-available/frontend /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+
+
+
+
+# SCP copy command from one folder to another on the same root directory
+sudo scp -r /home/ubuntu/database/ /home/ubuntu/blog-database/
+
+
+# To start the apps without going off ater some mins.
+cd ~/backend
+npm install  
+nohup npm start > backend.log 2>&1 &
+
+
+cd ~/frontend
+npm install
+nohup npm start > frontend.log 2>&1 &
+
+# Command to check if they are running
+ps aux | grep node
+
+# Using PM2 to run the backend app in the background
+cd ~/backend
+pm2 start app.js --name backend
+
+
+# Install backend dependencies
+echo "Installing backend dependencies..."
+npm install
+
+# Start backend using PM2
+echo "Starting backend with PM2..."
+pm2 start app.js --name backend
+
+# Save PM2 process list and enable on startup
+pm2 save
+pm2 startup systemd -u ubuntu --hp /home/ubuntu
+pm2 list
+
+
+# To get the present working directory 
+pwd
+
+# scp command
+scp -i server-key.pem -r ./database ubuntu@176.34.146.211:/home/ubuntu/ 
+scp -i server-key.pem -r ./backend ubuntu@18.202.55.100:/home/ubuntu/ 
+scp -i server-key.pem -r ./frontend ubuntu@34.244.85.241:/home/ubuntu/ 
+
+
+# To view better log of the service 
+sudo journalctl -u mongo-app.service --no-pager --since "5 minutes ago"
+sudo journalctl -u backend-app.service --no-pager
+sudo journalctl -u backend-app.service -f
+sudo journalctl -u blog-frontend.service -f
+
+# To view backend container log
+docker logs blog-backend -f
+
+# All slow queries will now show up in Docker logs via
+docker logs blog-db
+docker logs blog-db 2>&1 | grep "COMMAND"
+docker logs -f blog-db | grep "slow"
+
+# To test prometheus UI
+node_filesystem_avail_bytes
+
+
+# To check alertmanager log 
+ls -l ./monitoring/alertmanager/
+
+# To check the logs for grafana 
+docker logs grafana 2>&1 | grep -iE "error|fail|panic"
+docker logs --tail 50 grafana
+docker logs --tail 100 grafana
+docker logs --tail 100 grafana 2>&1 | grep -iE "error|fail|panic"
+docker logs blog-db
+docker logs grafana 2>&1 | grep -i error
+
+
+
+
+
+# File permissions
+sudo chown -R 472:472 ./grafana
+sudo chown -R 1000:1000 ./monitoring
+sudo chown -R $USER:$USER ./grafana/provisioning
+sudo chmod -R 644 ./grafana/provisioning/**/*.yml
+docker exec -it grafana ls -l /etc/grafana/dashboards
+sudo chmod -R 755 ./grafana/dashboards
+sudo chmod 755 ./grafana/dashboards/mongo-dashboard.json
+chmod 644 ./grafana/dashboards/mongo-dashboard.json
+
+
+
+
+# To allow firewall 
+sudo ufw allow 3000
+sudo ufw allow 9093
+
+# To view directory structure
+sudo apt install tree 
+tree -L 3
+
+# To install yamllint 
+sudo apt install yamllint
+yamllint ./grafana/provisioning/alerting/
+
+# To see the status of the running container 
+docker ps --format "table {{.Names}}\t{{.Status}}"
+docker inspect --format='{{json .State.Health}}' blog-db | jq
+
+# To see how much space Docker use
+docker system df
+
+# To clean up unused Docker resources
+docker system prune -f
+
+# To remove unused volumes 
+docker system prune --volumes -f
+
+# To remove old images 
+docker images
+docker rmi IMAGE_ID
+
+# To stop and remove all containers
+docker stop $(docker ps -aq)
+docker rm $(docker ps -aq)
+
+df -h
+
+# To verify if port 27017 is running
+sudo ss -tuln | grep 27017
+
+ping 10.0.28.12
+nc -zv 10.0.28.12 27017
+
+
+docker exec -it blog-db mongosh -u admin -p password123 --authenticationDatabase admin
+
+
+
+ssh -i ~/.ssh/ec2-github-actions ubuntu@18.202.55.100
+
+
+
+
+mongodb://admin:password123@34.253.155.219:27017/blog-db

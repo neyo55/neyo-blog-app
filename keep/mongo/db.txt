@@ -1,0 +1,56 @@
+blog-api/
+├── mongo/
+│   ├── Dockerfile
+│   ├── init/
+│   │   └── seed.js
+│   └── .dockerignore
+
+
+
+# Build image
+docker build -t neyo55/mongo-seeded:latest .
+
+# Run locally for testing
+docker run -d -p 27017:27017 --name mongo-seeded \
+  -e MONGO_INITDB_ROOT_USERNAME=admin \
+  -e MONGO_INITDB_ROOT_PASSWORD=password123 \
+  neyo55/mongo-seeded:latest
+
+# Push to Docker Hub
+docker push neyo55/mongo-seeded:latest
+
+
+
+docker run -d -p 3000:3000 \
+  --name blog-api-backend \
+  -e MONGO_URI="mongodb://admin:password123@host.docker.internal:27017/blog-db?authSource=admin" \
+  neyo55/blog-api-backend:latest
+
+
+
+# Open a shell inside the container (to view the CRUD inside the db)
+docker exec -it mongo-seeded mongosh -u admin -p password123 --authenticationDatabase admin
+use blog-db
+db.posts.find().pretty()
+
+
+
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/blog-api';
+
+MONGO_URI=mongodb://admin:password123@<mongo-container-host>:27017/blog-db?authSource=admin
+
+-e MONGO_URI=mongodb://admin:password123@host.docker.internal:27017/blog-db?authSource=admin
+
+# for mongo compass
+mongodb://admin:password123@localhost:27017/blog-db?authSource=admin
+
+# To stop a running background container
+docker rm -f cranky_merkle
+
+
+docker compose down -v   # Clean any previous containers/volumes
+docker compose pull      # Ensure all latest images are fetched
+docker compose up --build
+
+
+

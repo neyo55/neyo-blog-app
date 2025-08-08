@@ -1,0 +1,112 @@
+---
+apiVersion: 1
+
+groups:
+  - name: MongoDB Alerts
+    folder: MongoDB
+    interval: 1m
+    rules:
+      - uid: high-mongo-cpu
+        title: High MongoDB CPU Usage
+        condition: C
+        isPaused: false
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: rate(container_cpu_usage_seconds_total{container="blog-db"}[5m]) * 100
+              format: time_series
+              interval: ""
+              intervalFactor: 2
+              refId: A
+              legendFormat: CPU Usage
+          - refId: B
+            type: reduce
+            input: A
+            reducer: last
+          - refId: C
+            type: threshold
+            input: B
+            thresholds:
+              - value: 60
+                op: gt
+        for: 2m
+        annotations:
+          summary: "MongoDB CPU usage high"
+          description: "MongoDB container CPU usage > 60% for 2 minutes"
+        labels:
+          severity: warning
+
+      - uid: high-mongo-memory
+        title: High MongoDB Memory Usage
+        condition: C
+        isPaused: false
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: (container_memory_usage_bytes{container="blog-db"}) / (container_spec_memory_limit_bytes{container="blog-db"}) * 100
+              format: time_series
+              interval: ""
+              intervalFactor: 2
+              refId: A
+              legendFormat: Memory Usage
+          - refId: B
+            type: reduce
+            input: A
+            reducer: last
+          - refId: C
+            type: threshold
+            input: B
+            thresholds:
+              - value: 60
+                op: gt
+        for: 2m
+        annotations:
+          summary: "MongoDB memory usage high"
+          description: "MongoDB container memory usage > 60% for 2 minutes"
+        labels:
+          severity: warning
+
+      - uid: high-mongo-disk
+        title: High MongoDB Disk Usage
+        condition: C
+        isPaused: false
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: |
+                (node_filesystem_size_bytes{mountpoint="/",fstype!~"tmpfs|overlay"}
+                - node_filesystem_free_bytes{mountpoint="/",fstype!~"tmpfs|overlay"})
+                / node_filesystem_size_bytes{mountpoint="/",fstype!~"tmpfs|overlay"} * 100
+              format: time_series
+              interval: ""
+              intervalFactor: 2
+              refId: A
+              legendFormat: Disk Usage
+          - refId: B
+            type: reduce
+            input: A
+            reducer: last
+          - refId: C
+            type: threshold
+            input: B
+            thresholds:
+              - value: 70
+                op: gt
+        for: 2m
+        annotations:
+          summary: "MongoDB disk usage high"
+          description: "Disk usage > 70% for 2 minutes"
+        labels:
+          severity: warning

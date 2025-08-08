@@ -1,0 +1,186 @@
+version: '3.8'
+services:
+  mongo:
+    build: ./mongo
+    container_name: blog-db
+    mem_limit: 512m
+    cpus: "0.75"
+    env_file: .env
+    ports:
+      - "${MONGO_PORT}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo/init:/docker-entrypoint-initdb.d
+      - ./mongo/mongod.conf:/etc/mongo/mongod.conf
+    command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]      #["CMD-SHELL", "mongosh --eval 'db.runCommand({ ping: 1 })'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_AUTH_DATABASE: admin
+      ME_CONFIG_BASICAUTH_USERNAME: ${BASICAUTH_USERNAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${BASICAUTH_PASSWORD}
+      ME_CONFIG_SITE_COOKIESECRET: "randomsecretkey"
+      ME_CONFIG_SITE_SESSIONSECRET: "anotherrandomkey"
+
+  mongo-exporter:
+    image: bitnami/mongodb-exporter:latest
+    container_name: mongo-exporter
+    restart: always
+    ports:
+      - "9216:9216"
+    environment:
+      MONGODB_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017"
+    depends_on:
+      - mongo
+  
+  alertmanager:
+    image: prom/alertmanager
+    container_name: alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    restart: always
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-lifecycle'
+    depends_on:
+      - mongo-exporter
+      - alertmanager
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    # - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    # - ./grafana/provisioning/alerting:/etc/grafana/provisioning/alerting
+    # - ./grafana/dashboards:/var/lib/grafana/dashboards 
+      - ./grafana/dashboards:/etc/grafana/dashboards
+    # - ./grafana/dashboards:/var/lib/grafana/dashboards  
+    environment:
+      - GF_LOG_LEVEL=debug
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/mongo-dashboard.json     
+    restart: always
+    depends_on:
+      - prometheus
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    restart: always
+
+volumes:
+  mongo_data:
+  grafana_data:
+
+
+
+
+
+
+
+
+
+
+
+
+# version: '3.8'
+# services:
+#   mongo:
+#     build: ./mongo
+#     container_name: blog-db
+#     mem_limit: 512m
+#     env_file: .env
+#     ports:
+#       - "${MONGO_PORT}:27017"
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+#       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+#       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+#     volumes:
+#       - mongo_data:/data/db
+#       - ./mofana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+#       - ./grango/init:/docker-entrypoint-initdb.d
+#     restart: always
+#     logging:
+#       driver: "json-file"
+#       options:
+#         max-size: "10m"
+#         max-file: "3"
+#   mongo-express:
+#     image: mongo-express
+#     container_name: mongo-express
+#     restart: always
+#     depends_on:
+#       - mongo
+#     ports:
+#       - "8081:8081"
+#     environment:
+#       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+#       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+#       ME_CONFIG_MONGODB_SERVER: mongo
+#       ME_CONFIG_MONGODB_AUTH_DATABASE: admin
+#       ME_CONFIG_BASICAUTH_USERNAME: ${BASICAUTH_USERNAME}
+#       ME_CONFIG_BASICAUTH_PASSWORD: ${BASICAUTH_PASSWORD}
+#       ME_CONFIG_SITE_COOKIESECRET: "randomsecretkey"
+#       ME_CONFIG_SITE_SESSIONSECRET: "anotherrandomkey"
+#   mongo-exporter:
+#     image: bitnami/mongodb-exporter:latest
+#     container_name: mongo-exporter
+#     restart: always
+#     ports:
+#       - "9216:9216"
+#     environment:
+#       MONGODB_URI: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017"
+#     depends_on:
+#       - mongo
+
+# volumes:
+#   mongo_data:
+
+
+
+
+
+

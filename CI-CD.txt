@@ -1,0 +1,18 @@
+- all prerequisites will be installed on the instances via user-data scripts for each tier (docker, docker-compose and others)
+
+CI/CD Should perform;
+- clone the repositories respectively (blog-database, blog-backend, blog-frontned)
+- cd into the cloned repository 
+- run Docker Compose lifecycle commands 
+
+
+cat ~/.ssh/ec2-github-actions.pub
+
+
+Would you like me to:
+
+Customize the script (e.g., build volumes, logs)?
+
+Add rollback or error handling?
+
+adding logging, slack/discord notifications

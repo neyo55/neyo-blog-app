@@ -1,0 +1,66 @@
+{
+  "id": null,
+  "uid": "mongo-dashboard",
+  "title": "MongoDB Overview",
+  "tags": ["mongodb", "monitoring"],
+  "timezone": "browser",
+  "schemaVersion": 27,
+  "version": 1,
+  "editable": true,
+  "refresh": "30s",
+  "panels": [
+    {
+      "title": "MongoDB Uptime (seconds)",
+      "type": "stat",
+      "targets": [
+        {
+          "expr": "mongodb_instance_uptime_seconds",
+          "format": "time_series",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 3 }
+    },
+    {
+      "title": "Connections",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "mongodb_connections",
+          "format": "time_series",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 3 }
+    },
+    {
+      "title": "Memory Usage (MB)",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "container_memory_usage_bytes{container=\"blog-db\"} / 1024 / 1024",
+          "format": "time_series",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 3, "w": 6, "h": 3 }
+    },
+    {
+      "title": "Op Counters (Read/Write)",
+      "type": "graph",
+      "targets": [
+        {
+          "expr": "rate(mongodb_op_counters_insert[1m])",
+          "refId": "A",
+          "legendFormat": "Insert"
+        },
+        {
+          "expr": "rate(mongodb_op_counters_query[1m])",
+          "refId": "B",
+          "legendFormat": "Query"
+        }
+      ],
+      "gridPos": { "x": 6, "y": 3, "w": 6, "h": 3 }
+    }
+  ]
+}

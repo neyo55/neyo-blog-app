@@ -1,0 +1,46 @@
+Here is my directory structure for the blog-api  application 
+
+
+blog-api/
+README.md
+docker-compose.yml
+backend/
+app.js
+Dockerfile
+jest.config.js
+jest
+.env
+.dockerignore
+/tests/posts.test.js
+/routes/posts.js
+package.json
+
+frontend/
+client/
+pakckage.json
+jest.config.js
+.babelrc
+.dockerignore
+.gitignore
+Dockerfile
+public/
+├── favicon.ico
+├── index.html
+├── logo192.png
+├── logo512.png
+├── manifest.json
+|__ robots.txt
+src/
+├── App.css
+├── App.js
+├── App.test.js
+├── index.css
+├── index.js
+├── logo.svg
+├── reportWebVitals.js
+|__ setupTests.js
+
+database/mongo/
+    ├── Dockerfile
+    ├── init/seed.js
+    |___ .dockerignore

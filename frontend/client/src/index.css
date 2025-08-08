@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles for light mode */
+body.light {
+  @apply bg-white text-gray-900;
+}
+
+input, textarea, select {
+  @apply bg-white text-gray-900 border-gray-300;
+}
+
+/* Dark mode overrides */
+body.dark {
+  @apply bg-gray-900 text-gray-100;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+  @apply bg-gray-800 text-gray-100 border-gray-700;
+}
+
+body.dark button {
+  @apply bg-blue-700 text-white hover:bg-blue-800;
+}
+
+body.dark h1, body.dark h2, body.dark h3, body.dark p {
+  @apply text-gray-100;
+}
+
+/* Ensure contrast for specific components */
+.navbar {
+  @apply bg-gray-800 text-gray-100;
+}
+
+.footer {
+  @apply bg-gray-800 text-gray-100;
+}

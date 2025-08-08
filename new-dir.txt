@@ -1,0 +1,83 @@
+backend/
+├── app.js
+├── package.json
+├── .env
+├── .dockerignore
+├── jest.config.js
+├── jest/
+│   └── ...
+├── routes/
+│   ├── posts.js
+│   └── auth.js
+├── models/
+│   ├── Post.js
+│   ├── User.js
+│   └── Comment.js
+└── tests/
+    └── posts.test.js
+
+frontend/
+└── client/
+    ├── package.json
+    ├── Dockerfile
+    ├── .env
+    ├── .dockerignore
+    ├── docker-compose.yml
+    ├── .gitignore
+    ├── jest.config.js
+    ├── .babelrc
+    ├── tailwind.config.js
+    ├── postcss.config.js
+    ├── public/
+    │   ├── favicon.ico
+    │   ├── index.html
+    │   ├── logo192.png
+    │   ├── logo512.png
+    │   ├── manifest.json
+    │   └── robots.txt
+    └── src/
+        ├── App.js
+        ├── App.css
+        ├── App.test.js
+        ├── index.js
+        ├── index.css
+        ├── logo.svg
+        ├── reportWebVitals.js
+        ├── setupTests.js
+        ├── components/
+        │   ├── Auth/
+        │   │   ├── LoginForm.js
+        │   │   └── SignupForm.js
+        │   ├── Common/
+        │   │   ├── Navbar.js
+        │   │   ├── Footer.js
+        │   │   └── LoadingSpinner.js
+        │   ├── Posts/
+        │   │   ├── PostCard.js
+        │   │   ├── PostForm.js
+        │   │   └── Pagination.js
+        │   └── Search/
+        │       ├── SearchBar.js
+        │       └── Filters.js
+        ├── contexts/
+        │   ├── AuthContext.js
+        │   └── ThemeContext.js
+        ├── pages/
+        │   ├── Home.js
+        │   ├── CreatePost.js
+        │   ├── PostDetail.js
+        │   ├── SignUp.js
+        │   ├── SignIn.js
+        │   └── NotFound.js
+        ├── utils/
+        │   └── api.js
+
+
+
+
+
+
+"scripts": {
+    "start": "node app.js",
+    "test": "cross-env NODE_ENV=test jest --config ./jest.config.js"
+  },

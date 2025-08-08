@@ -1,0 +1,266 @@
+Here is my directory structure for the blog-api  application 
+
+
+blog-api/
+README.md
+docker-compose.yml
+backend/
+app.js
+Dockerfile
+jest.config.js
+jest
+.env
+.dockerignore
+/tests/posts.test.js
+/routes/posts.js
+package.json
+
+frontend/
+client/
+pakckage.json
+jest.config.js
+.babelrc
+.dockerignore
+.gitignore
+Dockerfile
+public/
+├── favicon.ico
+├── index.html
+├── logo192.png
+├── logo512.png
+├── manifest.json
+|__ robots.txt
+src/
+├── App.css
+├── App.js
+├── App.test.js
+├── index.css
+├── index.js
+├── logo.svg
+├── reportWebVitals.js
+|__ setupTests.js
+
+database/mongo/
+    ├── Dockerfile
+    ├── init/seed.js
+    |___ .dockerignore
+
+
+
+#######################################
+Blog Application – Full Stack (React + Node.js + MongoDB)
+
+blog-api/
+│
+├── docker-compose.yml
+├── README.md
+├── .env
+├── backend/
+├── frontend/
+└── database/
+
+backend/
+├── app.js
+├── package.json
+├── Dockerfile
+├── .env
+├── .dockerignore
+├── docker-compose.yml
+├── jest.config.js
+├── jest/                  # Optional - for custom test utilities
+│   └── ...
+├── routes/
+│   └── posts.js
+└── tests/
+    └── posts.test.js
+
+frontend/
+└── client/
+    ├── package.json
+    ├── Dockerfile
+    ├── .env
+    ├── .dockerignore
+    ├── docker-compose.yml
+    ├── .gitignore
+    ├── jest.config.js
+    ├── .babelrc
+
+    ├── public/
+    │   ├── favicon.ico
+    │   ├── index.html
+    │   ├── logo192.png
+    │   ├── logo512.png
+    │   ├── manifest.json
+    │   └── robots.txt
+
+    └── src/
+        ├── App.js
+        ├── App.css
+        ├── App.test.js
+        ├── index.js
+        ├── index.css
+        ├── logo.svg
+        ├── reportWebVitals.js
+        └── setupTests.js
+
+database/
+├── mongo/
+│    ├── Dockerfile
+│    ├── .dockerignore
+│    └── init/
+│        ├── init-admin.js
+│        ├── init-user.js
+│        └── seed.js
+├── .env
+└── docker-compose.yml
+
+######################################
+######################################
+######################################
+
+ROOT
+blog-api/
+│
+├── docker-compose.yml
+├── README.md
+├── .env
+├── backend/
+├── frontend/
+└── database/
+
+# BACKEND TIER
+blog-backend/
+├── app.js
+├── package.json
+├── Dockerfile
+├── .env
+├── .dockerignore
+├── jest.config.js
+├── jest/                  
+│   └── ...
+├── routes/
+│   └── posts.js
+└── tests/
+    └── posts.test.js
+
+# FRONTEND TIER
+blog-frontend/
+└── client/
+    ├── package.json
+    ├── Dockerfile
+    ├── .env
+    ├── .dockerignore
+    ├── .gitignore
+    ├── jest.config.js
+    ├── .babelrc
+
+    ├── public/
+    │   ├── favicon.ico
+    │   ├── index.html
+    │   ├── logo192.png
+    │   ├── logo512.png
+    │   ├── manifest.json
+    │   └── robots.txt
+
+    └── src/
+        ├── App.js
+        ├── App.css
+        ├── App.test.js
+        ├── index.js
+        ├── index.css
+        ├── logo.svg
+        ├── reportWebVitals.js
+        └── setupTests.js
+
+# DATABASE TIER
+blog-database/
+└── mongo/
+    ├── Dockerfile
+    ├── .dockerignore
+    └── init/
+        ├── init-admin.js
+        ├── init-user.js
+        └── seed.js
+
+
+
+############# NEW DIRECTORY SETUP #######################
+
+# NODE.JS-TIER
+backend/
+├── app.js
+├── package.json
+├── Dockerfile
+├── .env
+├── .dockerignore
+├── docker-compose.yml
+├── jest.config.js
+├── jest/                  # Optional - for custom test utilities
+│   └── ...
+├── routes/
+│   └── posts.js
+└── tests/
+    └── posts.test.js
+
+# REACT-TIER
+frontend/
+└── client/
+    ├── package.json
+    ├── Dockerfile
+    ├── .env
+    ├── .dockerignore
+    ├── docker-compose.yml
+    ├── .gitignore
+    ├── jest.config.js
+    ├── .babelrc
+
+    ├── public/
+    │   ├── favicon.ico
+    │   ├── index.html
+    │   ├── logo192.png
+    │   ├── logo512.png
+    │   ├── manifest.json
+    │   └── robots.txt
+
+    └── src/
+        ├── App.js
+        ├── App.css
+        ├── App.test.js
+        ├── index.js
+        ├── index.css
+        ├── logo.svg
+        ├── reportWebVitals.js
+        └── setupTests.js
+
+# MONGODB-TIER
+database/
+├── mongo/
+│    ├── mongod.conf
+│    ├── Dockerfile
+│    ├── .dockerignore
+│    └── init/
+│        ├── init-admin.js
+│        ├── init-user.js
+│        └── seed.js
+├── .env
+├── docker-compose.yml
+├── prometheus/
+│    └── prometheus.yml
+│
+├── alertmanager/
+│    └── alertmanager.yml
+├── grafana/
+│    ├── provisioning/
+│    │    ├── alerting/
+│    │    │    └── alerting.yml
+│    │    │
+│    │    ├── datasources
+│    │    │    └── datasource.yml
+│    │    │
+│    │    └── dashboards/
+│    │         └── dashboard.yml
+│    │
+│    └── dashboards/
+│         └── mongo-dashboard.json
+│     
+│ 

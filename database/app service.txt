@@ -1,0 +1,68 @@
+LOCATION:   /etc/systemd/system/mongo-app.service
+
+sudo nano /etc/systemd/system/mongo-app.service
+
+
+
+[Unit]
+Description=MongoDB Docker Compose Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/database
+ExecStart=/usr/local/bin/docker-compose up -d
+# ExecStop=/usr/local/bin/docker-compose down
+Restart=always
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+
+# RUN IN COMMAND
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl start mongo-app.service
+sudo systemctl enable mongo-app.service
+systemctl status mongo-app.service
+
+
+
+############ OR #############
+
+
+Create /etc/systemd/system/blog-db.service
+
+
+[Unit]
+Description=Blog DB Docker Compose Stack
+Requires=docker.service
+After=docker.service
+
+[Service]
+WorkingDirectory=/home/ubuntu/database
+ExecStart=/usr/local/bin/docker-compose up -d
+ExecStop=/usr/local/bin/docker-compose down
+Restart=always
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+# RUN IN COMMAND
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable blog-db
+sudo systemctl start blog-db
+systemctl status blog-db
+
+
+
+

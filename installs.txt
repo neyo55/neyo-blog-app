@@ -1,0 +1,94 @@
+npm install
+npm install bcryptjs
+npm install react-dom
+npm install -g heroku
+npm install -g netlify-cli
+npm start 
+
+
+# run this seperately to get the Object Id for the seedDemoUser.js '6893646d0a743246a7777ee2'
+node seedDemoUser.js     
+
+
+
+
+
+
+
+
+
+
+
+
+
+//PostForm.js
+// import React, { useState, useContext } from 'react';
+// import ReactQuill from 'react-quill';
+// import 'react-quill/dist/quill.snow.css';
+// import api from '../../utils/api';
+// import { AuthContext } from '../../contexts/AuthContext';
+
+// const PostForm = ({ post, onSuccess }) => {
+//   const [title, setTitle] = useState(post?.title || '');
+//   const [content, setContent] = useState(post?.content || '');
+//   const [category, setCategory] = useState(post?.category || 'Other');
+//   const { user } = useContext(AuthContext);
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     if (!user) {
+//       alert('Please sign in to create or edit a post.');
+//       return;
+//     }
+//     try {
+//       if (post?._id) {
+//         await api.put(`/posts/${post._id}`, { title, content, category });
+//       } else {
+//         await api.post('/posts', { title, content, category });
+//       }
+//       setTitle('');
+//       setContent('');
+//       setCategory('Other');
+//       onSuccess();
+//     } catch (err) {
+//       console.error('Error saving post:', err);
+//       alert('Failed to save post.');
+//     }
+//   };
+
+//   return (
+//     <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl mx-auto">
+//       <input
+//         type="text"
+//         placeholder="Blog Title"
+//         value={title}
+//         onChange={(e) => setTitle(e.target.value)}
+//         className="w-full p-3 border rounded dark:bg-gray-700 dark:text-white"
+//         required
+//       />
+//       <select
+//         value={category}
+//         onChange={(e) => setCategory(e.target.value)}
+//         className="w-full p-3 border rounded dark:bg-gray-700 dark:text-white"
+//       >
+//         <option value="Tech">Tech</option>
+//         <option value="Lifestyle">Lifestyle</option>
+//         <option value="Education">Education</option>
+//         <option value="Other">Other</option>
+//       </select>
+//       <ReactQuill
+//         value={content}
+//         onChange={setContent}
+//         className="bg-white dark:bg-gray-700 dark:text-white"
+//       />
+//       <button
+//         type="submit"
+//         className="bg-primary text-white px-4 py-2 rounded hover:bg-blue-600"
+//       >
+//         {post?._id ? 'Update Post' : 'Create Post'}
+//       </button>
+//     </form>
+//   );
+// };
+
+// export default PostForm;

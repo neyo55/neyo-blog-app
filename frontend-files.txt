@@ -1,0 +1,322 @@
+//App.js
+// This is for the container and the .env contains the correct URL
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './App.css';
+
+// Automatically use .env value or fallback
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000/api';
+console.log('API_BASE_URL =', API_BASE_URL);
+
+const App = () => {
+  const [posts, setPosts] = useState([]);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [editId, setEditId] = useState(null);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/posts`);
+      setPosts(res.data);
+    } catch (err) {
+      console.error('Error fetching posts:', err);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editId) {
+        await axios.put(`${API_BASE_URL}/posts/${editId}`, { title, content });
+        setEditId(null);
+      } else {
+        await axios.post(`${API_BASE_URL}/posts`, { title, content });
+      }
+      setTitle('');
+      setContent('');
+      fetchPosts();
+    } catch (err) {
+      console.error('Error saving post:', err);
+    }
+  };
+
+  const handleEdit = (post) => {
+    setTitle(post.title);
+    setContent(post.content);
+    setEditId(post._id);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/posts/${id}`);
+      fetchPosts();
+    } catch (err) {
+      console.error('Error deleting post:', err);
+    }
+  };
+
+  return (
+    <div className="App">
+      <h1>Neyo55 Blog App New</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          placeholder="Blog Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+        <textarea
+          id="content"
+          name="content"
+          placeholder="Content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          required
+        ></textarea>
+        <button type="submit">{editId ? 'Update Post' : 'Create Post'}</button>
+      </form>
+      <div className="posts">
+        {posts.map((post) => (
+          <div key={post._id} className="post">
+            <h2>{post.title}</h2>
+            <p>{post.content}</p>
+            <button onClick={() => handleEdit(post)}>Edit</button>
+            <button onClick={() => handleDelete(post._id)}>Delete</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default App;
+
+
+#### App.css ####
+.App {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+input,
+textarea {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: inherit;
+}
+
+textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+button {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post {
+  border: 1px solid #ccc;
+  padding: 18px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.post h2 {
+  margin: 0 0 10px;
+  color: #222;
+}
+
+.post p {
+  margin: 0 0 12px;
+  color: #555;
+}
+
+.post button {
+  margin-right: 10px;
+}
+
+
+//index.js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+
+//setupTests.js
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
+
+
+/public/
+index.html
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
+
+
+/client/
+package.json
+
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.27.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "PORT=3001 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "babel-jest": "^30.0.2"
+  }
+}
+
+
+
+jest.config.js
+
+module.exports = {
+  preset: 'react-scripts',
+  testEnvironment: 'jsdom',
+  transform: {
+    '^.+\\.(js|jsx)$': 'babel-jest',
+  },
+  transformIgnorePatterns: [
+    '/node_modules/(?!axios)/',
+  ],
+};

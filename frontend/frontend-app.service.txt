@@ -1,0 +1,33 @@
+LOCATION= /etc/systemd/system/blog-frontend.service
+
+
+
+# /etc/systemd/system/blog-frontend.service
+
+[Unit]
+Description=Blog Frontend React Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+WorkingDirectory=/home/ubuntu/frontend/client
+ExecStart=/usr/local/bin/docker-compose --env-file /home/ubuntu/frontend/client/.env up -d
+ExecStop=/usr/local/bin/docker-compose --env-file /home/ubuntu/frontend/client/.env down
+TimeoutStartSec=0
+RemainAfterExit=true
+User=ubuntu
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+
+# TO RUN IN THE COMMAND PROMPT 
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable blog-frontend.service
+sudo systemctl start blog-frontend.service
+sudo systemctl status blog-frontend.service
+sudo journalctl -u blog-frontend.service -f

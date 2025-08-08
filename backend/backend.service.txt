@@ -1,0 +1,27 @@
+LOCATION= /etc/systemd/system/backend-app.service
+
+sudo nano /etc/systemd/system/backend-app.service
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable backend-app.service
+sudo systemctl start backend-app.service
+sudo systemctl status backend-app.service
+
+
+
+
+[Unit]
+Description=Node.js Blog Backend Service
+Requires=docker.service
+After=docker.service
+
+[Service]
+WorkingDirectory=/home/ubuntu/backend
+ExecStart=/usr/local/bin/docker-compose up -d
+ExecStop=/usr/local/bin/docker-compose down
+RemainAfterExit=true
+User=ubuntu
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
