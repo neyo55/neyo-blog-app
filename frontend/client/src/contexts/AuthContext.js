@@ -8,19 +8,21 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     console.log('Setting demo user');
-    const demoUser = { _id: "6893646d0a743246a7777ee2", name: "Demo User", email: "demo@demo.com" };
-    if (!localStorage.getItem('token')) {
+    const demoUser = { _id: '6893646d0a743246a7777ee2', name: 'Demo User', email: 'demo@demo.com' };
+    if (!user) {
       localStorage.setItem('token', 'demo-token');
       setUser(demoUser);
     }
-  }, []);
+  }, [user]);
 
   const login = async (credentials) => {
     // Placeholder for login logic
+    console.log('Login attempted with:', credentials);
   };
 
   const signup = async (credentials) => {
     // Placeholder for signup logic
+    console.log('Signup attempted with:', credentials);
   };
 
   const logout = () => {

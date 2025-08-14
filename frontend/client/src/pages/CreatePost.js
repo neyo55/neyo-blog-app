@@ -14,7 +14,7 @@ const CreatePost = () => {
 
   const handleSave = async (postData) => {
     try {
-      const response = await fetch('http://localhost:3000/api/posts', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
