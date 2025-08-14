@@ -14,7 +14,7 @@ const Profile = () => {
     }
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/users/${user._id}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/${user._id}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token') || 'demo-token'}`,
           },
